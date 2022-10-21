@@ -1,8 +1,14 @@
 package interfaz;
 
 import mundo.BlackWhite;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import gfutria.SearchStateSpaces;
 
 public class Main {
+	
+	
 	
 	/*
 	 * Manual test for BlackWhite Class
@@ -49,9 +55,33 @@ public class Main {
 	
 	public static void main(String [] args ) {
 		
-		Main main = new Main();
 		
-		main.manualTest();
+		BlackWhite test;
+		ArrayList<String> lst;
+		SearchStateSpaces sss;
+		
+		System.out.println("Test");
+		test = new BlackWhite(3, 3, 1); // 3 missionaries, 3 cannibals, boat on the left side
+		
+		
+
+		sss  = new SearchStateSpaces("0:0:0-3:3:1", test, 5);// 3 missionaries, 3 cannibals, Right side
+		lst  = sss.solve();
+		
+		System.out.println("Steps number: " + lst.size());
+		if (lst.size() > 0) {
+			{
+				System.out.println("       IZQ   DER");
+				System.out.println("XX :: M:C:B-M:C:B");
+				System.out.println("Xo :: 3:3:1-0:0:0" + "\n");
+				
+				for (int i = 0; i < lst.size(); i++) {
+					System.out.println(lst.get(i));
+					
+				}
+			}
+			
+		}
 		
 	}
 

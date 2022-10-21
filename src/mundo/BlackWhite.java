@@ -6,7 +6,7 @@ public class BlackWhite extends Logic
 {
 	private int missionary, cannibal;
 	public int boat; // 1 left side, 0 right side
-	public final int boatCapacity = 2;
+	public int boatCapacity;
 	
 	public static String M = "M"; // A missionary moves
 	public static String MM = "MM"; // Two missionaries move
@@ -28,8 +28,23 @@ public class BlackWhite extends Logic
 		missionary = cannibal = 3;
 		boat=1;
 		lastMove = "";
+		boatCapacity=2;
 		
 	}
+	
+	/*
+	 * Constructor with parameters*/
+	public BlackWhite(int missionary, int cannibal, int boat) {
+		this.missionary = missionary;
+		this.cannibal = cannibal;
+		this.boat = boat;
+		lastMove = "";
+
+	}
+	
+	/*
+	 * 
+	 * Third constructor*/
 	
 	public BlackWhite(BlackWhite state) {
 		lastMove = state.lastMove;
@@ -104,6 +119,62 @@ public class BlackWhite extends Logic
 
 	}
 	
+	/*
+	 * Action validation methods
+	 * */
+	
+	// Main condition that determines if we can move the boat or not
+	
+	public boolean dangerousState(int missionary, int cannibal) {
+		return (missionary < cannibal && missionary != 0)||(missionary > cannibal && missionary != 3);
+	}
+	
+	public boolean canMove(String move) {
+		if (lastMove.equals(move)) return false; 
+        if (move.equals(M)){
+            if (getBoat() == 1)
+                return getMissionary() >= 1 && 
+                       !dangerousState(missionary - 1,cannibal);
+            else
+                return 3-getMissionary() >= 1 && 
+                       !dangerousState(missionary + 1,cannibal);
+        }
+        if (move.equals(MM)){
+            if (getBoat() == 1)
+                return getMissionary() >= 2 &&
+                        !dangerousState(missionary - 2,cannibal);
+            else
+                return 3-getMissionary() >= 2 &&
+                        !dangerousState(missionary + 2,cannibal);
+        }
+        if (move.equals(C)){
+            if (getBoat() == 1)
+                return getCannibal() >= 1 &&
+                        !dangerousState(missionary,cannibal - 1);
+            else
+                return 3-getCannibal() >= 1 &&
+                        !dangerousState(missionary,cannibal + 1);
+        }
+        if (move.equals(CC)){
+            if (getBoat() == 1)
+                return getCannibal() >= 2 &&
+                        !dangerousState(missionary,cannibal - 2);
+            else
+                return 3-getCannibal() >= 2 &&
+                        !dangerousState(missionary,cannibal + 2);
+        }
+        if (move.equals(MC)){
+            if (getBoat() == 1)
+                return getMissionary() >= 1 && getCannibal()  >= 1 &&
+                        !dangerousState(missionary - 1,cannibal - 1);
+            else
+                return 3-getMissionary() >= 1 && 3-getCannibal() >= 1 &&
+                        !dangerousState(missionary + 1,cannibal + 1);
+                  
+        }
+        return false;
+	
+	}
 	
 	/*
 	 * Action Methods
@@ -190,62 +261,7 @@ public class BlackWhite extends Logic
 		
 	}
 	
-	/*
-	 * Action validation methods
-	 * */
 	
-	// Main condition that determines if we can move the boat or not
-	
-	public boolean dangerousState(int missionary, int cannibal) {
-		return (missionary < cannibal && missionary != 0)||(missionary > cannibal && missionary != 3);
-	}
-	
-	public boolean canMove(String move) {
-		if (lastMove.equals(move)) return false; 
-        if (move.equals(M)){
-            if (getBoat() == 1)
-                return getMissionary() >= 1 && 
-                       !dangerousState(missionary - 1,cannibal);
-            else
-                return 3-getMissionary() >= 1 && 
-                       !dangerousState(missionary + 1,cannibal);
-        }
-        if (move.equals(MM)){
-            if (getBoat() == 1)
-                return getMissionary() >= 2 &&
-                        !dangerousState(missionary - 2,cannibal);
-            else
-                return 3-getMissionary() >= 2 &&
-                        !dangerousState(missionary + 2,cannibal);
-        }
-        if (move.equals(C)){
-            if (getBoat() == 1)
-                return getCannibal() >= 1 &&
-                        !dangerousState(missionary,cannibal - 1);
-            else
-                return 3-getCannibal() >= 1 &&
-                        !dangerousState(missionary,cannibal + 1);
-        }
-        if (move.equals(CC)){
-            if (getBoat() == 1)
-                return getCannibal() >= 2 &&
-                        !dangerousState(missionary,cannibal - 2);
-            else
-                return 3-getCannibal() >= 2 &&
-                        !dangerousState(missionary,cannibal + 2);
-        }
-        if (move.equals(MC)){
-            if (getBoat() == 1)
-                return getMissionary() >= 1 && getCannibal()  >= 1 &&
-                        !dangerousState(missionary - 1,cannibal - 1);
-            else
-                return 3-getMissionary() >= 1 && 3-getCannibal() >= 1 &&
-                        !dangerousState(missionary + 1,cannibal + 1);
-                  
-        }
-        return false;
-	
-	}
 	
 	public int finalPeopleAmount() {
 		int value = getMissionary() + getCannibal();
@@ -258,19 +274,36 @@ public class BlackWhite extends Logic
 	public void action(int arg0) {
 		switch(arg0) {
 		case 1:
-			carry_missionary();
+			if (canMove(C)) {
+				carry_cannibal();	
+			}
+			
 			break;
 		case 2:
-			carry_2missionaries();
+			if (canMove(M)) {
+				carry_missionary();
+
+			}
+
 			break;
 		case 3:
-			carry_cannibal();
+			if (canMove(CC)) {
+				carry_2cannibals();
+
+			}
+
 			break;
 		case 4:
-			carry_2cannibals();
+			if (canMove(MM)) {
+				carry_2missionaries();
+
+			}
 			break;
 		case 5:
-			carry_oneofeach();
+			if (canMove(MC)) {
+				carry_oneofeach();
+
+			}
 			break;
 		default: 
 		    System.out.println("Invalid option");
@@ -280,16 +313,27 @@ public class BlackWhite extends Logic
 	}
 
 	@Override
-	public Logic cloneObject(Logic arg0) {
+	public Logic cloneObject(Logic obj) {
+		 BlackWhite objn = (BlackWhite) obj;
+	     BlackWhite objc = new BlackWhite();
+
+	     objc.setBoat(objn.getBoat());
+	     objc.setCannibal(objn.getCannibal());
+	     objc.setMissionary(objn.getMissionary());
+	        
+	     return objc;
 		
 		
-		return null;
 	}
 
 	@Override
 	public String state() {
+		int[] current_state = getState();
 		
-		return null;
+		String aux = Math.abs(current_state[0])+ ":" + Math.abs(current_state[1])+ ":" +Math.abs(current_state[2]) + "-" +
+				   (3 - current_state[0])+ ":" +(3 - current_state[1])+ ":" +(1 - current_state[2]);
+		
+		return aux;
 	}
 	
 	 
