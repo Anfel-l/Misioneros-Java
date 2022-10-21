@@ -1,6 +1,9 @@
 package mundo;
 
-public class BlackWhite {
+import gfutria.Logic;
+
+public class BlackWhite extends Logic
+{
 	private int missionary, cannibal;
 	public int boat; // 1 left side, 0 right side
 	public final int boatCapacity = 2;
@@ -247,6 +250,46 @@ public class BlackWhite {
 	public int finalPeopleAmount() {
 		int value = getMissionary() + getCannibal();
 		return value;
+	}
+	
+	
+
+	@Override
+	public void action(int arg0) {
+		switch(arg0) {
+		case 1:
+			carry_missionary();
+			break;
+		case 2:
+			carry_2missionaries();
+			break;
+		case 3:
+			carry_cannibal();
+			break;
+		case 4:
+			carry_2cannibals();
+			break;
+		case 5:
+			carry_oneofeach();
+			break;
+		default: 
+		    System.out.println("Invalid option");
+			break;
+		}
+		
+	}
+
+	@Override
+	public Logic cloneObject(Logic arg0) {
+		
+		
+		return null;
+	}
+
+	@Override
+	public String state() {
+		
+		return null;
 	}
 	
 	 
