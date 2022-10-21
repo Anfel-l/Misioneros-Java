@@ -3,9 +3,15 @@ package mundo;
 public class BlackWhite {
 	private int missionary, cannibal;
 	public int boat; // 1 left side, 0 right side
+	public final int boatCapacity = 2;
 	
-	private int esquinaizq[];
-	private int esquinader[];
+	public static String M = "M"; // A missionary moves
+	public static String MM = "MM"; // Two missionaries move
+	public static String C = "C"; // A cannibal moves
+	public static String CC = "CC"; // Two cannibals move
+	public static String MC = "MC"; // 
+	
+	public String lastMove;
 	
 	
 	/*
@@ -17,6 +23,16 @@ public class BlackWhite {
 	 * */
 	public BlackWhite() {
 		missionary = cannibal = 3;
+		boat=1;
+		lastMove = "";
+		
+	}
+	
+	public BlackWhite(BlackWhite state) {
+		lastMove = state.lastMove;
+		missionary = state.missionary;
+		cannibal = state.cannibal;
+		boat = state.boat;
 	}
 
 	
@@ -48,6 +64,44 @@ public class BlackWhite {
 		this.missionary = missionary;
 	}
 	
+	public int getBoatCapacity() {
+		return boatCapacity;
+	}
+	
+	
+	
+	/* State and ToString methods
+	 * */
+	
+	public int[] getState() {
+		int [] state = new int[3];
+		state[0]= getMissionary();
+		state[1]= getCannibal();
+		state[2]= getBoat();
+		
+		return state;
+	}
+	
+	/*
+	 * Returns the final output
+	 * 
+	 * */
+	
+	public String printState() {
+		int[] current_state = getState();
+		return "Left side: " + 
+			   " Missionaries: " + Math.abs(current_state[0])+
+			   " Cannibals: " + Math.abs(current_state[1])+
+			   " Boat: " + Math.abs(current_state[2]) +
+			   " ______ " +
+			   "Right side: " + 
+			   " Missionaries: " +(3 - current_state[0])+
+			   " Cannibals: " +(3 - current_state[1])+
+			   " Boat: " +(1 - current_state[2]);
+
+	}
+	
+	
 	/*
 	 * Action Methods
 	 * 
@@ -71,6 +125,8 @@ public class BlackWhite {
 			cannibal++;
 		}
 		
+		lastMove = C;
+		
 	}
 	
 	// Carry a missionary
@@ -82,6 +138,8 @@ public class BlackWhite {
 			boat = 1;
 			missionary++;
 		}
+		
+		lastMove = M;
 	}
 	
 	// No cannibal, 2 missionaries
@@ -93,6 +151,8 @@ public class BlackWhite {
 			boat = 1;
 			missionary = getMissionary() + 2;
 		}
+		
+		lastMove = MM;
 		
 		
 	}
@@ -107,6 +167,8 @@ public class BlackWhite {
 			cannibal = getCannibal() + 2;
 		
 		}
+		
+		lastMove = CC;
 	}
 	
 	// Carry one of each one
@@ -121,7 +183,72 @@ public class BlackWhite {
 			cannibal++;
 		}
 		
+		lastMove = MC;
+		
 	}
+	
+	/*
+	 * Action validation methods
+	 * */
+	
+	// Main condition that determines if we can move the boat or not
+	
+	public boolean dangerousState(int missionary, int cannibal) {
+		return (missionary < cannibal && missionary != 0)||(missionary > cannibal && missionary != 3);
+	}
+	
+	public boolean canMove(String move) {
+		if (lastMove.equals(move)) return false; 
+        if (move.equals(M)){
+            if (getBoat() == 1)
+                return getMissionary() >= 1 && 
+                       !dangerousState(missionary - 1,cannibal);
+            else
+                return 3-getMissionary() >= 1 && 
+                       !dangerousState(missionary + 1,cannibal);
+        }
+        if (move.equals(MM)){
+            if (getBoat() == 1)
+                return getMissionary() >= 2 &&
+                        !dangerousState(missionary - 2,cannibal);
+            else
+                return 3-getMissionary() >= 2 &&
+                        !dangerousState(missionary + 2,cannibal);
+        }
+        if (move.equals(C)){
+            if (getBoat() == 1)
+                return getCannibal() >= 1 &&
+                        !dangerousState(missionary,cannibal - 1);
+            else
+                return 3-getCannibal() >= 1 &&
+                        !dangerousState(missionary,cannibal + 1);
+        }
+        if (move.equals(CC)){
+            if (getBoat() == 1)
+                return getCannibal() >= 2 &&
+                        !dangerousState(missionary,cannibal - 2);
+            else
+                return 3-getCannibal() >= 2 &&
+                        !dangerousState(missionary,cannibal + 2);
+        }
+        if (move.equals(MC)){
+            if (getBoat() == 1)
+                return getMissionary() >= 1 && getCannibal()  >= 1 &&
+                        !dangerousState(missionary - 1,cannibal - 1);
+            else
+                return 3-getMissionary() >= 1 && 3-getCannibal() >= 1 &&
+                        !dangerousState(missionary + 1,cannibal + 1);
+                  
+        }
+        return false;
+	
+	}
+	
+	public int finalPeopleAmount() {
+		int value = getMissionary() + getCannibal();
+		return value;
+	}
+	
 	 
 
 }
