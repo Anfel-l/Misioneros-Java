@@ -16,7 +16,6 @@ public class BlackWhite extends Logic
 	
 	public String lastMove;
 	
-	
 	/*
 	 * Empty constructor
 	 * 
@@ -28,8 +27,7 @@ public class BlackWhite extends Logic
 		missionary = cannibal = 3;
 		boat=1;
 		lastMove = "";
-		boatCapacity=2;
-		
+		boatCapacity=2;		
 	}
 	
 	/*
@@ -39,36 +37,29 @@ public class BlackWhite extends Logic
 		this.cannibal = cannibal;
 		this.boat = boat;
 		lastMove = "";
-
 	}
 	
 	/*
 	 * 
 	 * Third constructor*/
-	
 	public BlackWhite(BlackWhite state) {
 		lastMove = state.lastMove;
 		missionary = state.missionary;
 		cannibal = state.cannibal;
 		boat = state.boat;
 	}
-
 	
 	/*
 	 * Setter and getters for both Cannibal
 	 * and Missionary values on 
 	 * 
 	 * */
-	
-	
-
     public void setBoat(int boat) {
 		this.boat = boat;
 	}
     public int getBoat() {
 		return boat;
 	}
-	
 	public int getCannibal() {
 		return cannibal;
 	}
@@ -81,16 +72,12 @@ public class BlackWhite extends Logic
 	public void setMissionary(int missionary) {
 		this.missionary = missionary;
 	}
-	
 	public int getBoatCapacity() {
 		return boatCapacity;
 	}
 	
-	
-	
 	/* State and ToString methods
 	 * */
-	
 	public int[] getState() {
 		int [] state = new int[3];
 		state[0]= getMissionary();
@@ -104,7 +91,6 @@ public class BlackWhite extends Logic
 	 * Returns the final output
 	 * 
 	 * */
-	
 	public String printState() {
 		int[] current_state = getState();
 		return "Left side: " + 
@@ -122,9 +108,7 @@ public class BlackWhite extends Logic
 	/*
 	 * Action validation methods
 	 * */
-	
 	// Main condition that determines if we can move the boat or not
-	
 	public boolean dangerousState(int missionary, int cannibal) {
 		return (missionary < cannibal && missionary != 0)||(missionary > cannibal && missionary != 3);
 	}
@@ -135,7 +119,6 @@ public class BlackWhite extends Logic
 	 * missionaries as cannibals, or the number of missionaries is above cannibals.
 	 * 
 	 * */
-	
 	public boolean canMove(String move) {
 		if (lastMove.equals(move)) return false; 
         if (move.equals(M)){
@@ -176,11 +159,9 @@ public class BlackWhite extends Logic
                         !dangerousState(missionary - 1,cannibal - 1);
             else
                 return 3-getMissionary() >= 1 && 3-getCannibal() >= 1 &&
-                        !dangerousState(missionary + 1,cannibal + 1);
-                  
+                        !dangerousState(missionary + 1,cannibal + 1);                  
         }
         return false;
-	
 	}
 	
 	/*
@@ -195,7 +176,6 @@ public class BlackWhite extends Logic
 	 * 
 	 * */
 	
-	
 	// Carry a cannibal
 	public void carry_cannibal() {
 		if(getBoat() == 1) {
@@ -205,9 +185,7 @@ public class BlackWhite extends Logic
 			boat = 1;
 			cannibal++;
 		}
-		
-		lastMove = C;
-		
+		lastMove = C;	
 	}
 	
 	// Carry a missionary
@@ -219,7 +197,6 @@ public class BlackWhite extends Logic
 			boat = 1;
 			missionary++;
 		}
-		
 		lastMove = M;
 	}
 	
@@ -232,10 +209,7 @@ public class BlackWhite extends Logic
 			boat = 1;
 			missionary = getMissionary() + 2;
 		}
-		
-		lastMove = MM;
-		
-		
+		lastMove = MM;		
 	}
 	
 	// No missionaries, 2 cannibals
@@ -246,9 +220,7 @@ public class BlackWhite extends Logic
 		} else {
 			boat = 1;
 			cannibal = getCannibal() + 2;
-		
 		}
-		
 		lastMove = CC;
 	}
 	
@@ -263,19 +235,14 @@ public class BlackWhite extends Logic
 			missionary++;
 			cannibal++;
 		}
-		
 		lastMove = MC;
-		
 	}
-	
-	
-	
+
 	public int finalPeopleAmount() {
 		int value = getMissionary() + getCannibal();
 		return value;
 	}
-	
-	
+		
 	/*
 	 * Determines first if the action is allowed according to the
 	 * "canMove" method which decides based on the main rule and then
@@ -289,20 +256,17 @@ public class BlackWhite extends Logic
 		case 1:
 			if (canMove(C)) {
 				carry_cannibal();	
-			}
-			
+			}		
 			break;
 		case 2:
 			if (canMove(M)) {
 				carry_missionary();
 			}
-
 			break;
 		case 3:
 			if (canMove(CC)) {
 				carry_2cannibals();
 			}
-
 			break;
 		case 4:
 			if (canMove(MM)) {
@@ -318,7 +282,6 @@ public class BlackWhite extends Logic
 		    System.out.println("Invalid option");
 			break;
 		}
-		
 	}
 
 	@Override
@@ -331,8 +294,6 @@ public class BlackWhite extends Logic
 	     objc.setMissionary(objn.getMissionary());
 	        
 	     return objc;
-		
-		
 	}
 
 	@Override
@@ -350,9 +311,6 @@ public class BlackWhite extends Logic
 		
 		return aux;
 	}
-	
-	 
-
 }
 
 
