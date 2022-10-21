@@ -129,6 +129,13 @@ public class BlackWhite extends Logic
 		return (missionary < cannibal && missionary != 0)||(missionary > cannibal && missionary != 3);
 	}
 	
+	/*
+	 * This method determines if an individual can be transported or not
+	 * Main rule: A movement is only allowed if there is the same amount of
+	 * missionaries as cannibals, or the number of missionaries is above cannibals.
+	 * 
+	 * */
+	
 	public boolean canMove(String move) {
 		if (lastMove.equals(move)) return false; 
         if (move.equals(M)){
@@ -269,6 +276,12 @@ public class BlackWhite extends Logic
 	}
 	
 	
+	/*
+	 * Determines first if the action is allowed according to the
+	 * "canMove" method which decides based on the main rule and then
+	 * if true, proceeds and then does the movement.
+	 * 
+	 * */
 
 	@Override
 	public void action(int arg0) {
@@ -282,27 +295,23 @@ public class BlackWhite extends Logic
 		case 2:
 			if (canMove(M)) {
 				carry_missionary();
-
 			}
 
 			break;
 		case 3:
 			if (canMove(CC)) {
 				carry_2cannibals();
-
 			}
 
 			break;
 		case 4:
 			if (canMove(MM)) {
 				carry_2missionaries();
-
 			}
 			break;
 		case 5:
 			if (canMove(MC)) {
 				carry_oneofeach();
-
 			}
 			break;
 		default: 
@@ -330,6 +339,12 @@ public class BlackWhite extends Logic
 	public String state() {
 		int[] current_state = getState();
 		
+		// Returns the state of the situation represented as explained in the following text:
+		// C: amount of cannibals
+		// M: amount of missionaries
+		// B: state of the boat
+		//      LEFT RIGHT 
+		//     M:C:B-M:C:B    
 		String aux = Math.abs(current_state[0])+ ":" + Math.abs(current_state[1])+ ":" +Math.abs(current_state[2]) + "-" +
 				   (3 - current_state[0])+ ":" +(3 - current_state[1])+ ":" +(1 - current_state[2]);
 		

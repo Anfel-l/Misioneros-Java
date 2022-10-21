@@ -68,10 +68,10 @@ public class Main {
 		sss  = new SearchStateSpaces("0:0:0-3:3:1", test, 5);// 3 missionaries, 3 cannibals, Right side
 		lst  = sss.solve();
 		
-		System.out.println("Steps number: " + lst.size());
+		System.out.println("# of Steps: " + ((Integer)lst.size()+1));
 		if (lst.size() > 0) {
 			{
-				System.out.println("       IZQ   DER");
+				System.out.println("      LEFT  RIGHT");
 				System.out.println("XX :: M:C:B-M:C:B");
 				System.out.println("Xo :: 3:3:1-0:0:0" + "\n");
 				
